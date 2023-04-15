@@ -1,5 +1,8 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { GridComponent } from './grid.component';
+import { MaterialModule } from './material/material.module';
+
 
 
 
@@ -8,9 +11,12 @@ import { GridComponent } from './grid.component';
     GridComponent
   ],
   imports: [
+    CommonModule,
+    MaterialModule
   ],
   exports: [
-    GridComponent
+    GridComponent,
+    MaterialModule
   ]
 })
 export class GridModule { }
