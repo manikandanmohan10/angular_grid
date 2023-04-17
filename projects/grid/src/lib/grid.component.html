@@ -1,7 +1,33 @@
 
+<div class="dropdown">
+  <button class="dropdown-toggle" (click)="toggle()">Dropdown</button>
+  <div class="dropdown-menu" id="myDropdownMenu" [ngClass]="{'active':isToggled}">
+    <div [formGroup]="filterConditions">
+      <div formArrayName="filter" *ngFor="let item of filter.controls; let i = index">
+        <div [formGroupName]="i">
+          <select formControlName="filterJoin">
+            <option *ngFor="let item of filterJoinList" [value]="item">{{item | uppercase}}</option>
+          </select><select formControlName="colName">
+            <option *ngFor="let item of displayedColumns" [value]="item">{{item | uppercase}}</option>
+          </select>
+          <select formControlName="filterCondition">
+            <option *ngFor="let item of filterCoditionList" [value]="item">{{item | uppercase}}</option>
+          </select>
+
+          <input type="text" formControlName="colValue">
+        </div>
+
+      </div>
+      <div><button (click)="addFilter()">Add</button></div>
+    </div>
+    <div>
+      <button (click)="filterTable()">Filter</button>
+    </div>
+  </div>
+</div>
 <div class="container">
   <div class="table-view">
-    <table mat-table #table [dataSource]="data" class="mat-elevation-z8" matSort>
+    <table mat-table #table [dataSource]="data" class="mat-elevation-z8" >
   
       <ng-container [matColumnDef]="column" *ngFor="let column of displayedColumns">
         <th mat-sort-header mat-header-cell *matHeaderCellDef > {{column}} </th>
@@ -14,8 +40,7 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
   </div>
-  
-  <mat-paginator #paginator
+ <mat-paginator #paginator
   [pageSize]="10"
   [pageSizeOptions]="[5, 10, 50, dataSource.data.length]"></mat-paginator>
 </div>
