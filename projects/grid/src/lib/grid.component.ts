@@ -62,7 +62,7 @@ export class GridComponent {
     this.dataSource.column.forEach((col:any) => {
       this.displayedColumns.push(col.field)
     })
-
+  }
   
   private initializingForm(){
     this.filterConditions = this.formBuild.group({
