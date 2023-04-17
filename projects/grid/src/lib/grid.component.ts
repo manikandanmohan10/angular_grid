@@ -114,7 +114,7 @@ export class GridComponent {
     this.isToggled = !this.isToggled
 
   }
-  get filter(): FormArray{
+  get getFilter(): FormArray{
     return this.filterConditions.controls['filter'] as FormArray
   }
   public addFilter(): void{
@@ -175,6 +175,9 @@ export class GridComponent {
         return false
         break;
     }
+  }
+  public removeFilter(index:number){
+    this.getFilter.removeAt(index)
   }
   
 }
