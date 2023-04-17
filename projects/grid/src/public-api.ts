@@ -5,3 +5,4 @@
 export * from './lib/grid.service';
 export * from './lib/grid.component';
 export * from './lib/grid.module';
+export * from './lib/material/material.module';
