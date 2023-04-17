@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GridComponent } from './grid.component';
 import { MaterialModule } from './material/material.module';
 
@@ -12,7 +13,9 @@ import { MaterialModule } from './material/material.module';
   ],
   imports: [
     CommonModule,
-    MaterialModule
+    MaterialModule,
+    ReactiveFormsModule,
+    FormsModule
   ],
   exports: [
     GridComponent,

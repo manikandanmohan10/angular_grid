@@ -1,4 +1,30 @@
 
+<div class="dropdown">
+  <button class="dropdown-toggle" (click)="toggle()">Dropdown</button>
+  <div class="dropdown-menu" id="myDropdownMenu" [ngClass]="{'active':isToggled}">
+    <div [formGroup]="filterConditions">
+      <div formArrayName="filter" *ngFor="let item of filter.controls; let i = index">
+        <div [formGroupName]="i">
+          <select formControlName="filterJoin">
+            <option *ngFor="let item of filterJoinList" [value]="item">{{item | uppercase}}</option>
+          </select><select formControlName="colName">
+            <option *ngFor="let item of displayedColumns" [value]="item">{{item | uppercase}}</option>
+          </select>
+          <select formControlName="filterCondition">
+            <option *ngFor="let item of filterCoditionList" [value]="item">{{item | uppercase}}</option>
+          </select>
+
+          <input type="text" formControlName="colValue">
+        </div>
+
+      </div>
+      <div><button (click)="addFilter()">Add</button></div>
+    </div>
+    <div>
+      <button (click)="filterTable()">Filter</button>
+    </div>
+  </div>
+</div>
 <table mat-table [dataSource]="data" class="mat-elevation-z8" >
 
   <ng-container [matColumnDef]="column" *ngFor="let column of displayedColumns">
