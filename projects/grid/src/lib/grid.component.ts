@@ -1,9 +1,33 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import {MatSort, Sort} from '@angular/material/sort';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { filter, flatMap } from 'rxjs';
 
 
-
+export interface Element {
+  name: string,
+  phone: string,
+  email: string,
+  address: string,
+  postalZip: string,
+  region: string,
+  country: string,
+  list: number,
+  text: string,
+  numberrange: number,
+  currency: string,
+  alphanumeric: string,
+  date: string,
+  constant: number,
+  company: string,
+  boolean: false,
+  list1: string,
+  guid: string,
+  cvv: number,
+  track2: string,
+}
 
 @Component({
   selector: 'lib-grid',
@@ -24,10 +48,22 @@ export class GridComponent {
   private ngOnInit(): void {
     this.initializingForm()
     this.data = this.dataSource.data
+   }
+  sortDir = 1;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort | undefined;
+  
+
+  ngAfterViewInit() {
+    this.data =  new MatTableDataSource<Element>(this.dataSource.data);
+    this.data.paginator = this.paginator;
+    this.data.sort = this.sort;
+    console.log(this.data.paginator)
     this.dataSource.column.forEach((col:any) => {
       this.displayedColumns.push(col.field)
     })
-  }
+
+  
   private initializingForm(){
     this.filterConditions = this.formBuild.group({
       filter:this.formBuild.array([this.createArray()])
@@ -140,4 +176,5 @@ export class GridComponent {
         break;
     }
   }
+  
 }
