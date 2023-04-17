@@ -29,8 +29,7 @@ export interface Element {
 @Component({
   selector: 'lib-grid',
   templateUrl: './grid.component.html',
-  styleUrls: [
-  ]
+  styleUrls: ['./grid.component.css']
 })
 export class GridComponent {
   sortDir = 1;

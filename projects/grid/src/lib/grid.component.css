@@ -1,0 +1,8 @@
+.table-view{
+    overflow-x:auto;
+    border: 2px solid rgb(167, 158, 158);
+}
+.container {
+    width: 80%;
+    margin: auto; 
+}
