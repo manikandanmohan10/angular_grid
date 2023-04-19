@@ -3,7 +3,7 @@
   <button class="dropdown-toggle" (click)="toggle()">Dropdown</button>
   <div class="dropdown-menu" id="myDropdownMenu" [ngClass]="{'active':isToggled}">
     <div [formGroup]="filterConditions">
-      <div formArrayName="filter" *ngFor="let item of filter.controls; let i = index">
+      <div formArrayName="filter" *ngFor="let item of getFilter.controls; let i = index">
         <div [formGroupName]="i">
           <select formControlName="filterJoin">
             <option *ngFor="let item of filterJoinList" [value]="item">{{item | uppercase}}</option>
@@ -15,6 +15,7 @@
           </select>
 
           <input type="text" formControlName="colValue">
+          <button (click)="removeFilter(i)">Delete</button>
         </div>
 
       </div>
@@ -46,5 +47,6 @@
   [pageSize]="10"
   [pageSizeOptions]="[5, 10, 50, dataSource.data.length]"></mat-paginator>
 </div>
+<video src="https://www.youtube.com/watch?v=7M9hc_PC_Vg&list=RDYmXJp4RtBCM&index=7"></video>
 
 

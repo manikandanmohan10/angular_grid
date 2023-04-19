@@ -6,28 +6,7 @@ import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { filter, flatMap } from 'rxjs';
 
 
-export interface Element {
-  name: string,
-  phone: string,
-  email: string,
-  address: string,
-  postalZip: string,
-  region: string,
-  country: string,
-  list: number,
-  text: string,
-  numberrange: number,
-  currency: string,
-  alphanumeric: string,
-  date: string,
-  constant: number,
-  company: string,
-  boolean: false,
-  list1: string,
-  guid: string,
-  cvv: number,
-  track2: string,
-}
+
 
 @Component({
   selector: 'lib-grid',
@@ -40,14 +19,15 @@ export class GridComponent {
   filterConditions!: FormGroup;
   filterObject!: FormGroup;
   filterJoinList = ['where','and', 'or'];
-  filterCoditionList = ['equal', 'not equal', 'like', 'not like', 'in', 'not in']
+  filterCoditionList = ['equal', 'not equal', 'like', 'not like']
 
   data:any;
   displayedColumns:any = []
   constructor(private formBuild:FormBuilder){}
   private ngOnInit(): void {
     this.initializingForm()
-    this.data = this.dataSource.data
+    this.data =  new MatTableDataSource<Element>(this.dataSource.data);
+
    }
   sortDir = 1;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -55,7 +35,6 @@ export class GridComponent {
   
 
   ngAfterViewInit() {
-    this.data =  new MatTableDataSource<Element>(this.dataSource.data);
     this.data.paginator = this.paginator;
     this.data.sort = this.sort;
     console.log(this.data.paginator)
@@ -82,7 +61,7 @@ export class GridComponent {
   private filterValuefun(col:any,filter:string,key?:string ):boolean{
     console.log(col,filter,key)
     if (key){
-      if(col[key].toString().toLowerCase().includes(filter)){
+      if(col[key].toString().toLowerCase().includes(filter.toLowerCase())){
         return true;
       }
     }
@@ -90,7 +69,7 @@ export class GridComponent {
       let keys = Object.keys(col);
     for(let key of keys){
       console.log(key)
-      if(col[key].toString().toLowerCase().includes(filter)){
+      if(col[key].toString().toLowerCase().includes(filter.toLowerCase())){
         return true;
       }
     }
@@ -107,14 +86,14 @@ export class GridComponent {
       
     })
     console.log(filterValue)
-    this.data = filterValue 
+    this.data.data = filterValue 
   }
   public toggle(): void{
     console.log('helo')
     this.isToggled = !this.isToggled
 
   }
-  get filter(): FormArray{
+  get getFilter(): FormArray{
     return this.filterConditions.controls['filter'] as FormArray
   }
   public addFilter(): void{
@@ -123,27 +102,44 @@ export class GridComponent {
     filterArray.push(this.createArray())
     console.log(filterArray)
   }
+  public removeFilter(index:number){
+    this.getFilter.removeAt(index)
+  }
 
   public filterTable(): void{
     let filteredObjects:any = []
-    console.log('value => ', this.filterConditions.controls['filter'].value)
+    this.data.data = this.dataSource.data
+    console.log('value => ', this.data.data)
     const filterArr =this.filterConditions.controls['filter'].value
-    filterArr.forEach((filterValue:any) => {
-      console.log(filterValue)
-      if(filterValue.filterJoin ==='and' || 'where'){
-        filteredObjects = this.data.filter((col:any) => {
-          return this.queryCondition(filterValue,col)
-        })
-      }
-      else{
-        this.dataSource.data.forEach((col:any) => {
+    if (filterArr.length > 0){
 
-        })
-      }
-      
-    })
-    console.log(filteredObjects)
-    this.data = filteredObjects
+      filterArr.forEach((filterValue:any) => {
+        console.log(filterValue)
+        
+        if(filterValue.filterJoin ==='and' || filterValue.filterJoin === 'where'){
+          filteredObjects = this.data.data.filter((col:any) => {
+            return this.queryCondition(filterValue,col)
+          })
+        }
+        else if(filterValue.filterJoin ==='or'){
+          filteredObjects = this.dataSource.data.filter((col:any) => {
+            return this.queryCondition(filterValue,col)
+          })
+        }
+        return false
+        
+      })
+    }
+    else{
+      filteredObjects = this.dataSource.data
+    }
+    // let v = this.data.data.concat(filteredObjects)
+    // this.data.data = v.filter((value:any,index:any,self:any) => {
+    //   return self.indexOf(value) === index
+    // })
+    this.data.data = filteredObjects
+    console.log(this.data.data)
+    
   }
   private queryCondition(filterValue:any,data:any):boolean{
     switch (filterValue.filterCondition) {
@@ -152,28 +148,18 @@ export class GridComponent {
           return true;
         }
         return false;
-        case 'not equal':
-          if(data[filterValue.colName] !== filterValue.colValue){
-            return true;
-          }
-          return false;
-        case 'like':
-          return this.filterValuefun(data,filterValue.colValue,filterValue.colName);
-        case 'not like':
-          console.log("not like => ",filterValue)
-          return !this.filterValuefun(data,filterValue.colValue,filterValue.colName);
-
-        // case 'in':
-        //   console.log("in => ",filterValue)
-  
-        //   break;
-        // case 'not in':
-        //     console.log("not in => ",filterValue)
-    
-        //     break;
+      case 'not equal':
+        if(data[filterValue.colName] !== filterValue.colValue){
+          return true;
+        }
+        return false;
+      case 'like':
+        return this.filterValuefun(data,filterValue.colValue,filterValue.colName);
+      case 'not like':
+        console.log("not like => ",filterValue)
+        return !this.filterValuefun(data,filterValue.colValue,filterValue.colName);
       default:
         return false
-        break;
     }
   }
   
